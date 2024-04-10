@@ -1,20 +1,63 @@
-[![Python 2.6 2.7 3.7](https://img.shields.io/badge/python-2.6%20%7C%202.7%20%7C%203.7-blue.svg)](https://www.python.org/)
-[![Build Status](https://dev.azure.com/shotgun-ecosystem/Toolkit/_apis/build/status/Apps/tk-multi-reviewsubmission?branchName=master)](https://dev.azure.com/shotgun-ecosystem/Toolkit/_build/latest?definitionId=64&branchName=master)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Linting](https://img.shields.io/badge/PEP8%20by-Hound%20CI-a873d1.svg)](https://houndci.com)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/nfa-vfxim/tk-multi-reviewsubmission?include_prereleases)](https://github.com/nfa-vfxim/tk-multi-reviewsubmission) 
+[![GitHub issues](https://img.shields.io/github/issues/nfa-vfxim/tk-multi-reviewsubmission)](https://github.com/nfa-vfxim/tk-multi-reviewsubmission/issues) 
 
-## Documentation
-This repository is a part of the Shotgun Pipeline Toolkit.
 
-- For more information about this app and for release notes, *see the wiki section*.
-- For general information and documentation, click here: https://support.shotgunsoftware.com/entries/95441257
-- For information about Shotgun in general, click here: http://www.shotgunsoftware.com/toolkit
+# Review Submission <img src="icon_256.png" alt="Icon" height="24"/>
 
-## Using this app in your Setup
-All the apps that are part of our standard app suite are pushed to our App Store.
-This is where you typically go if you want to install an app into a project you are
-working on. For an overview of all the Apps and Engines in the Toolkit App Store,
-click here: https://support.shotgunsoftware.com/entries/95441247.
+Provides functionality to submit media to Shotgun for review.
 
-## Have a Question?
-Don't hesitate to contact us! You can find us on support@shotgunsoftware.com
+## Requirements
+
+| ShotGrid version | Core version | Engine version |
+|------------------|--------------|----------------|
+| -                | v0.19.5      | -              |
+
+## Configuration
+
+### Strings
+
+| Name                 | Description                                                | Default value |
+|----------------------|------------------------------------------------------------|---------------|
+| `display_name`       | Specify the name that should be used in menus and the main |               |
+| `new_version_status` | The value to use for a new Version's status.               | rev           |
+
+
+### Booleans
+
+| Name                | Description                                                                                                                                                                      | Default value |
+|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `upload_to_shotgun` | Should the movie being created be uploaded to Shotgun as a version or just kept on disk? Disabling this as well as the store_on_disk option effectively disables the whole tool. | True          |
+| `store_on_disk`     | Should the movie being created be kept on disk? Disabling this as well as the upload_to_shotgun option will effectively disable the whole tool.                                  | True          |
+
+
+### Templates
+
+| Name                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Default value | Fields |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|--------|
+| `movie_path_template` | Template defining the output location of the movie file on the the file system. For this template you can use all the fields defined in the template passed to the render_and_submit fields. In addition to these you can use the special fields width and height, which contain the resolution of the movie. If the store_on_disk setting is false, this setting will still be required but will be used as a temporary location for processing before the file is uploaded to Shotgun. |               |        |
+
+
+### Integers
+
+| Name                     | Description                                                                                                                                                                                                 | Default value |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `movie_width`            | The width of the rendered movie file                                                                                                                                                                        | 1920          |
+| `movie_height`           | The height of the rendered movie file                                                                                                                                                                       | 1080          |
+| `version_number_padding` | This value will be used to pad the version number in the slate and various movie burnins. This will not affect version number padding in the movie filename. See movie_path_template. Use 1 for no padding. | 3             |
+
+
+### Config paths
+
+| Name         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default value |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `slate_logo` | This is the path to an image to use on the slate such as a company logo. The supplied image will be reformated into a 400 pixel box and the lower left corner of the logo will be aligned 100 pixels to the right and 100 pixels above the lower left corner of the slate. You can use an image with an alpha channel if you want to add transparency. Currently any image format supported by Nuke is adequate. If this setting is an empty string, no logo will be applied. |               |
+
+
+### Hooks
+
+| Name                | Description                                                   | Default value                                               |
+|---------------------|---------------------------------------------------------------|-------------------------------------------------------------|
+| `render_media_hook` | Implements how media get generated while this app is running. | {self}/render_media.py:{self}/{engine_name}/render_media.py |
+| `submitter_hook`    | Implements how media get sent to Shotgun                      | {self}/submitter_sgtk.py                                    |
+
+
